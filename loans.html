@@ -1,0 +1,75 @@
+<!doctype html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Loans - Library</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+</head>
+
+<body>
+<nav class="nav">
+    <div class="container">
+        <a class="brand" href="/">Library App</a>
+        <div class="nav-links">
+            <a href="/books.html">Books</a>
+            <a href="/members.html">Members</a>
+            <a href="/loans.html">Loans</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container">
+    <h1>Loans</h1>
+
+    <section class="card">
+        <h2>Create Loan</h2>
+        <form id="loan-form">
+            <div class="row">
+                <label>Member
+                    <select id="memberId" name="memberId" required>
+                        <option value="">Select member</option>
+                    </select>
+                </label>
+                <label>Book
+                    <select id="bookId" name="bookId" required>
+                        <option value="">Select book</option>
+                    </select>
+                </label>
+                <label>Loaned At <input id="loanedAt" name="loanedAt" type="date" required /></label>
+                <label>Due At <input id="dueAt" name="dueAt" type="date" required /></label>
+            </div>
+            <div class="form-actions">
+                <button type="submit">Add Loan</button>
+                <button type="button" id="reset-loan">Reset</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>All Loans</h2>
+        <div id="loans-list">Loading...</div>
+    </section>
+</main>
+
+<div id="modal" class="modal hidden">
+    <div class="modal-content">
+        <button class="close" id="close-modal">×</button>
+        <h3>Edit Loan</h3>
+        <form id="edit-loan-form">
+            <label>Member
+                <select id="edit-memberId" required></select>
+            </label>
+            <label>Book
+                <select id="edit-bookId" required></select>
+            </label>
+            <label>Loaned At <input id="edit-loanedAt" type="date" required /></label>
+            <label>Due At <input id="edit-dueAt" type="date" required /></label>
+            <div class="form-actions">
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/loans.js"></script>
+</body>
+</html>

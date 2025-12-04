@@ -1,0 +1,66 @@
+<!doctype html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Books - Library</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+</head>
+
+<body>
+<nav class="nav">
+    <div class="container">
+        <a class="brand" href="/">Library App</a>
+        <div class="nav-links">
+            <a href="/books.html">Books</a>
+            <a href="/members.html">Members</a>
+            <a href="/loans.html">Loans</a>
+        </div>
+    </div>
+</nav>
+
+
+<main class="container">
+    <h1>Books</h1>
+    <section class="card">
+        <h2>Add Book</h2>
+        <form id="book-form">
+        <div class="row">
+            <!-- require exactly 13 numeric digits -->
+            <label>ISBN
+              <input id="isbn" name="isbn" required inputmode="numeric" pattern="\d{13}" maxlength="13" title="Enter exactly 13 numeric digits (ISBN-13)" />
+            </label>
+            <label>Title <input id="title" name="title" required /></label>
+            <label>Author <input id="author" name="author" required /></label>
+            <label>Copies <input id="copies" name="copies" type="number" min="1" required /></label>
+        </div>
+        <div class="form-actions">
+            <button type="submit">Add Book</button>
+            <button type="button" id="reset-book">Reset</button>
+        </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>All Books</h2>
+        <div id="books-list">Loading...</div>
+    </section>
+</main>
+
+
+<div id="modal" class="modal hidden">
+    <div class="modal-content">
+        <button class="close" id="close-modal">×</button>
+        <h3>Edit Book</h3>
+        <form id="edit-book-form">
+            <label>ISBN <input id="edit-isbn" name="isbn" readonly /></label>
+            <label>Title <input id="edit-title" name="title" required /></label>
+            <label>Author <input id="edit-author" name="author" required /></label>
+            <label>Copies <input id="edit-copies" name="copies" type="number" min="1" required /></label>
+            <div class="form-actions"><button type="submit">Save</button></div>
+        </form>
+    </div>
+</div>
+
+
+<script src="/js/book.js"></script>
+</body>
+</html>

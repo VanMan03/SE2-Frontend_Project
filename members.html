@@ -1,0 +1,61 @@
+<!doctype html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Members - Library</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+</head>
+
+<body>
+<nav class="nav">
+    <div class="container">
+        <a class="brand" href="/">Library App</a>
+        <div class="nav-links">
+            <a href="/books.html">Books</a>
+            <a href="/members.html">Members</a>
+            <a href="/loans.html">Loans</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container">
+    <h1>Members</h1>
+
+    <section class="card">
+        <h2>Add Member</h2>
+        <form id="member-form">
+            <div class="row">
+                <label>Name <input id="name" name="name" required /></label>
+                <label>Email <input id="email" name="email" type="email" required /></label>
+                <label>Joined At <input id="joinedAt" name="joinedAt" type="date" required /></label>
+            </div>
+            <div class="form-actions">
+                <button type="submit">Add Member</button>
+                <button type="button" id="reset-member">Reset</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>All Members</h2>
+        <div id="members-list">Loading...</div>
+    </section>
+</main>
+
+<div id="modal" class="modal hidden">
+    <div class="modal-content">
+        <button class="close" id="close-modal">×</button>
+        <h3>Edit Member</h3>
+        <form id="edit-member-form">
+            <label>Name <input id="edit-name" name="name" required /></label>
+            <label>Email <input id="edit-email" name="email" type="email" required /></label>
+            <label>Joined At <input id="edit-joinedAt" name="joinedAt" type="date" required /></label>
+            <div class="form-actions">
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/members.js"></script>
+</body>
+</html>
