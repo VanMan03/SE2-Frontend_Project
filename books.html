@@ -20,6 +20,23 @@
 
 <main class="container">
     <h1>Books</h1>
+
+    <!-- SEARCH BAR -->
+    <section class="card">
+        <div class="row search-row" style="align-items:center;gap:8px;">
+            <input id="search-input" type="search" placeholder="Search books..." autocomplete="off" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:4px;" />
+            <select id="search-by" aria-label="Search by" style="padding:8px;border:1px solid var(--border);border-radius:4px;">
+                <option value="title">Title</option>
+                <option value="isbn">ISBN</option>
+                <option value="author">Author</option>
+            </select>
+            <button type="button" id="search-btn">Search</button>
+            <button type="button" id="search-clear">Clear</button>
+
+            <ul id="search-suggestions" class="suggestions hidden" role="listbox"></ul>
+        </div>
+    </section>
+
     <section class="card">
         <h2>Add Book</h2>
         <form id="book-form">

@@ -199,3 +199,36 @@ button[disabled]{opacity:.6}
 @media(max-width:520px){
     .row{grid-template-columns:1fr}
 }
+
+/* Suggestions dropdown: align to the search container and span its width */
+.row[style*="position:relative"], .search-row {
+  position: relative; /* ensure parent is positioned */
+}
+
+.suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-height: 260px;
+  overflow:auto;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+  z-index:40;
+  padding:6px 0;
+  list-style:none;
+}
+.suggestions.hidden { display:none; }
+.suggestions .suggestion-item{
+  padding:10px 12px;
+  cursor:pointer;
+  font-size:14px;
+  color:var(--text);
+}
+.suggestions .suggestion-item:hover,
+.suggestions .suggestion-item.active{
+  background:var(--bg);
+}

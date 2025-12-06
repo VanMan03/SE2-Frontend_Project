@@ -9,6 +9,114 @@ const closeModalBtn = document.getElementById('close-modal');
 const editBookForm = document.getElementById('edit-book-form');
 let currentEditingId = null; // added
 
+// SEARCH elements & cache
+const searchInput = document.getElementById('search-input');
+const searchBy = document.getElementById('search-by');
+const searchClear = document.getElementById('search-clear');
+const searchBtn = document.getElementById('search-btn');
+const suggestionsEl = document.getElementById('search-suggestions');
+let allBooks = []; // cached list from server
+let suggestionsIndex = -1;
+
+// simple debounce
+function debounce(fn, wait = 200) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), wait);
+  };
+}
+
+function renderSuggestions(list) {
+  if (!suggestionsEl) return;
+  if (!list || list.length === 0) {
+    suggestionsEl.classList.add('hidden');
+    suggestionsEl.innerHTML = '';
+    suggestionsIndex = -1;
+    return;
+  }
+  const by = (searchBy?.value || 'title');
+  suggestionsEl.classList.remove('hidden');
+  suggestionsEl.innerHTML = list.slice(0, 8).map((item, idx) => {
+    const text = by === 'isbn' ? (item.isbn || '') :
+                 by === 'author' ? (item.author || '') :
+                 (item.title || '');
+    return `<li role="option" data-index="${idx}" data-id="${item._id}" class="suggestion-item">${escapeHtml(text)}</li>`;
+  }).join('');
+  suggestionsIndex = -1;
+}
+
+function getSuggestions(query, by) {
+  if (!query) return [];
+  const q = query.toLowerCase();
+  return allBooks.filter(b => {
+    const value = (by === 'isbn' ? (b.isbn || '') :
+                  by === 'author' ? (b.author || '') :
+                  (b.title || '')).toString().toLowerCase();
+    return value.includes(q);
+  });
+}
+
+// input handler (debounced)
+const onSearchInput = debounce(() => {
+  const q = (searchInput?.value || '').trim();
+  const by = (searchBy?.value || 'title');
+  if (!q) {
+    renderSuggestions([]);
+    return;
+  }
+  const list = getSuggestions(q, by);
+  renderSuggestions(list);
+}, 180);
+
+// select suggestion
+function onSuggestionClick(e) {
+  const item = e.target.closest('.suggestion-item');
+  if (!item) return;
+  const idx = Number(item.dataset.index || 0);
+  const by = (searchBy?.value || 'title');
+  const matches = getSuggestions(searchInput.value.trim(), by);
+  const selected = matches[idx];
+  if (!selected) return;
+
+  // auto-fill the input only (do not auto-submit)
+  const value = by === 'isbn' ? selected.isbn :
+                by === 'author' ? selected.author :
+                selected.title;
+  searchInput.value = value || '';
+  renderSuggestions([]); // hide suggestions
+  suggestionsIndex = -1;
+  searchInput.focus();
+}
+
+// keyboard navigation for suggestions
+function onSearchKeydown(e) {
+  if (!suggestionsEl || suggestionsEl.classList.contains('hidden')) return;
+  const items = suggestionsEl.querySelectorAll('.suggestion-item');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') {
+    suggestionsIndex = Math.min(suggestionsIndex + 1, items.length - 1);
+    items.forEach(i => i.classList.remove('active'));
+    items[suggestionsIndex].classList.add('active');
+    e.preventDefault();
+  } else if (e.key === 'ArrowUp') {
+    suggestionsIndex = Math.max(suggestionsIndex - 1, 0);
+    items.forEach(i => i.classList.remove('active'));
+    items[suggestionsIndex].classList.add('active');
+    e.preventDefault();
+  } else if (e.key === 'Enter') {
+    const active = suggestionsEl.querySelector('.suggestion-item.active') || items[0];
+    if (active) {
+      active.click();
+      e.preventDefault();
+    } else {
+      filterBooks();
+    }
+  } else if (e.key === 'Escape') {
+    renderSuggestions([]);
+  }
+}
+
 // Helper: escape HTML to avoid XSS when inserting into innerHTML
 function escapeHtml(str) {
   if (str == null) return '';
@@ -42,7 +150,8 @@ async function fetchBooks() {
       throw new Error(getErrorMessage(res.status, text));
     }
     const data = await res.json();
-    renderBooks(data);
+    allBooks = Array.isArray(data) ? data : [];
+    renderBooks(allBooks);
   } catch (err) {
     booksList.innerHTML = `<div class="error">${escapeHtml(err.message)}</div>`;
     console.error('fetchBooks error:', err);
@@ -243,6 +352,41 @@ if (editBookForm) {
     }
   });
 }
+
+// Filter helper
+function filterBooks() {
+  if (!allBooks || allBooks.length === 0) return renderBooks([]);
+  const q = (searchInput?.value || '').trim().toLowerCase();
+  const by = (searchBy?.value || 'title');
+  if (!q) return renderBooks(allBooks);
+  const filtered = allBooks.filter(b => {
+    const value = (by === 'isbn' ? (b.isbn || '') :
+                  by === 'author' ? (b.author || '') :
+                  (b.title || '')).toString().toLowerCase();
+    return value.includes(q);
+  });
+  renderBooks(filtered);
+}
+
+// wire search events
+if (searchInput) {
+  searchInput.addEventListener('input', onSearchInput);
+  searchInput.addEventListener('keydown', onSearchKeydown);
+  // hide suggestions when losing focus (allow click to register)
+  searchInput.addEventListener('blur', () => setTimeout(() => renderSuggestions([]), 150));
+}
+if (searchBy) searchBy.addEventListener('change', () => {
+  // re-suggest when field changes
+  onSearchInput();
+});
+if (searchBtn) searchBtn.addEventListener('click', () => filterBooks());
+if (searchClear) searchClear.addEventListener('click', () => {
+  if (searchInput) searchInput.value = '';
+  if (searchBy) searchBy.value = 'title';
+  renderSuggestions([]);
+  filterBooks();
+});
+if (suggestionsEl) suggestionsEl.addEventListener('click', onSuggestionClick);
 
 // Initialize
 fetchBooks();
