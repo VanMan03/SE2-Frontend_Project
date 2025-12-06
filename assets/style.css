@@ -34,11 +34,35 @@ body{
 
 
 .container{
-    max-width:var(--maxw);
-    margin:24px auto;
-    padding:0 16px;
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 20px;
+  width:100%;
 }
 
+/* Make nav wrap and increase touch targets */
+.nav .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:12px 0;
+}
+.brand{ font-size:1.05rem; }
+
+/* nav links: stacked on narrow screens and easier to tap */
+.nav-links{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.nav-links a{
+  padding:8px 10px;
+  border-radius:6px;
+  font-size:0.95rem;
+}
 
 .nav{
     background:var(--primary);
@@ -86,149 +110,182 @@ body{
 }
 
 .row{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-    gap:16px;
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:12px;
 }
-
-label{
-    display:flex;
-    flex-direction:column;
-    font-size:14px;
-}
-
-input,select,textarea{
-    padding:10px;
-    border:1px solid var(--border);
-    border-radius:6px;
-    margin-top:6px;
-    background:#fff;
-}
-
-input:focus, select:focus, textarea:focus{
-    outline:2px solid var(--primary-light);
-    border-color:var(--primary);
-}
-
-
-button{
-    padding:10px 14px;
-    border-radius:6px;
-    border:0;
-    background:var(--primary);
-    color:#fff;
-    cursor:pointer;
-    font-weight:500;
-    transition:.2s;
-}
-button:hover{
-    background:var(--primary-dark);
-}
-
-button[disabled]{opacity:.6}
-
-.table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:12px;
-}
-
-.table th,.table td{
-    padding:10px;
-    border-bottom:1px solid var(--border);
-    text-align:left;
-}
-
-
-.small{font-size:13px;color:var(--muted)}
-
-.footer{
-    padding:18px 0;
-    text-align:center;
-    color:var(--muted);
-    font-size:14px;
-}
-
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.55);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.modal.hidden{display:none}
-
-.modal-content{
-    background:#fff;
-    border-radius:10px;
-    padding:20px;
-    min-width:340px;
-    max-width:720px;
-    position:relative;
-    border-top:6px solid var(--primary);
-}
-
-.close{
-    position:absolute;
-    right:10px;top:10px;
-    background:transparent;
-    border:0;
-    font-size:22px;
-    cursor:pointer;
-    color:var(--text);
-}
-
-
-.actions{display:flex;gap:8px}
-
-.action-btn{background:var(--error)}
-
-.link{
-    background:transparent;
-    border:0;
-    color:var(--primary);
-    cursor:pointer;
-    font-weight:500;
-}
-
-.link:hover{color:var(--primary-dark)}
-
-@media(max-width:520px){
-    .row{grid-template-columns:1fr}
-}
-
-/* Suggestions dropdown: align to the search container and span its width */
-.row[style*="position:relative"], .search-row {
-  position: relative; /* ensure parent is positioned */
-}
-
-.suggestions {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  width: 100%;
-  max-height: 260px;
-  overflow:auto;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:6px;
-  box-shadow:0 6px 18px rgba(0,0,0,0.06);
-  z-index:40;
-  padding:6px 0;
-  list-style:none;
-}
-.suggestions.hidden { display:none; }
-.suggestions .suggestion-item{
+.row > label { display:flex; flex-direction:column; gap:6px; }
+input,select,textarea {
+  width:100%;
   padding:10px 12px;
-  cursor:pointer;
-  font-size:14px;
-  color:var(--text);
+  font-size:15px;
 }
-.suggestions .suggestion-item:hover,
-.suggestions .suggestion-item.active{
-  background:var(--bg);
+
+/* Make rows single column on narrow widths */
+@media (max-width:920px){
+  .row{ grid-template-columns:1fr; }
+  .table th,.table td{ min-width:120px; }
+}
+
+/* Tables: horizontal scroll on small devices */
+.table{
+  width:100%;
+  display:block;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Buttons: larger, spaced, full width on mobile */
+.form-actions{
+  display:flex;
+  gap:12px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+.form-actions > button{
+  min-width:110px;
+  padding:10px 14px;
+  border-radius:8px;
+  font-size:15px;
+}
+@media (max-width:720px){
+  .form-actions{ flex-direction:column; align-items:stretch; }
+  .form-actions > button{ width:100%; }
+}
+
+/* Modal responsiveness */
+.modal-content{
+  width:640px;
+  max-width:calc(100% - 32px);
+  padding:18px;
+  border-radius:10px;
+}
+@media (max-width:520px){
+  .modal-content{ padding:14px; border-radius:8px; }
+}
+
+/* Suggestions dropdown adjustments for mobile */
+.suggestions{
+  max-height:240px;
+  font-size:14px;
+}
+.suggestions .suggestion-item{ padding:12px 14px; }
+
+/* Increase tappable areas generally */
+button, .nav-links a { touch-action:manipulation; }
+
+/* Small-screen tweaks */
+@media (max-width:520px){
+  body { font-size:15px; }
+  .brand{ font-size:1rem; }
+  .nav-links a{ font-size:14px; padding:10px 12px; }
+  .card{ padding:14px; }
+  header.hero .hero-content{ padding:18px 12px; }
+}
+
+/* Responsive: general container and typography */
+.container{
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 20px;
+  width:100%;
+}
+
+/* Make nav wrap and increase touch targets */
+.nav .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:12px 0;
+}
+.brand{ font-size:1.05rem; }
+
+/* nav links: stacked on narrow screens and easier to tap */
+.nav-links{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.nav-links a{
+  padding:8px 10px;
+  border-radius:6px;
+  font-size:0.95rem;
+}
+
+/* Forms: stack fields on small screens and full width inputs */
+.row{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:12px;
+}
+.row > label { display:flex; flex-direction:column; gap:6px; }
+input,select,textarea {
+  width:100%;
+  padding:10px 12px;
+  font-size:15px;
+}
+
+/* Make rows single column on narrow widths */
+@media (max-width:920px){
+  .row{ grid-template-columns:1fr; }
+  .table th,.table td{ min-width:120px; }
+}
+
+/* Tables: horizontal scroll on small devices */
+.table{
+  width:100%;
+  display:block;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Buttons: larger, spaced, full width on mobile */
+.form-actions{
+  display:flex;
+  gap:12px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+.form-actions > button{
+  min-width:110px;
+  padding:10px 14px;
+  border-radius:8px;
+  font-size:15px;
+}
+@media (max-width:720px){
+  .form-actions{ flex-direction:column; align-items:stretch; }
+  .form-actions > button{ width:100%; }
+}
+
+/* Modal responsiveness */
+.modal-content{
+  width:640px;
+  max-width:calc(100% - 32px);
+  padding:18px;
+  border-radius:10px;
+}
+@media (max-width:520px){
+  .modal-content{ padding:14px; border-radius:8px; }
+}
+
+/* Suggestions dropdown adjustments for mobile */
+.suggestions{
+  max-height:240px;
+  font-size:14px;
+}
+.suggestions .suggestion-item{ padding:12px 14px; }
+
+/* Increase tappable areas generally */
+button, .nav-links a { touch-action:manipulation; }
+
+/* Small-screen tweaks */
+@media (max-width:520px){
+  body { font-size:15px; }
+  .brand{ font-size:1rem; }
+  .nav-links a{ font-size:14px; padding:10px 12px; }
+  .card{ padding:14px; }
+  header.hero .hero-content{ padding:18px 12px; }
 }
